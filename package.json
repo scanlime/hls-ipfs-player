@@ -10,9 +10,11 @@
   "author": "",
   "license": "CC0",
   "dependencies": {
+    "@webpack-cli/init": "^0.3.0",
     "hls.js": "^0.14.11",
+    "hlsjs-ipfs-loader": "github:scanlime/hlsjs-ipfs-loader",
     "ipfs": "^0.50.0",
-    "hlsjs-ipfs-loader": "github:scanlime/hlsjs-ipfs-loader"
+    "prettier": "^2.1.1"
   },
   "devDependencies": {
     "webpack": "^4.44.1",

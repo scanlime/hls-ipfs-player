@@ -33,8 +33,7 @@ ipfs_bootstrap="$ipfs_delegates /dns4/sfo-3.bootstrap.libp2p.io/tcp/443/wss/p2p/
 url_gateway="ipfs.cf-ipfs.com"
 
 # Optional ipfs cluster for pinning the resulting HTML and JS.
-
-#cluster="ssh ipfs-m1@filebox bin/ipfs-cluster-ctl"
+# export IPFS_CLUSTER_CTL="ssh user@host bin/ipfs-cluster-ctl"
 
 ##################################################################
 
@@ -77,8 +76,8 @@ EOF
 
 echo https://$(ipfs cid base32 $html_cid).$url_gateway
 
-if [ -n "$cluster" ]; then
-	$cluster pin add --name hls-player-$video_cid $html_cid >&2
-	$cluster pin add --name hls-player-bundle $bundle_cid >&2
+if [ -n "$IPFS_CLUSTER_CTL" ]; then
+	$IPFS_CLUSTER_CTL pin add --name hls-player-$video_cid $html_cid >&2
+	$IPFS_CLUSTER_CTL pin add --name hls-player-bundle $bundle_cid >&2
 fi
 
