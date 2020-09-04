@@ -1,0 +1,21 @@
+{
+  "name": "hls-ipfs-player",
+  "version": "0.0.1",
+  "description": "Simple HLS player container for serving videos over IPFS",
+  "private": true,
+  "scripts": {
+    "build": "webpack",
+    "example": "webpack && (url=`examples/hls-ipfs.sh QmVLAuxsFgCkDWE5kd5ZPthBm4vaksTe4YEmH266wB5ZW8`; echo // $url; curl $url) > examples/index.html"
+  },
+  "author": "",
+  "license": "CC0",
+  "dependencies": {
+    "hls.js": "^0.14.11",
+    "ipfs": "^0.50.0",
+    "hlsjs-ipfs-loader": "github:scanlime/hlsjs-ipfs-loader"
+  },
+  "devDependencies": {
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
+  }
+}
