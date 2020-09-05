@@ -51,6 +51,12 @@ url_gateway=ipfs.cf-ipfs.com
 # check the supplied path
 ipfs cat $video_m3u8 > /dev/null
 
+# Note that the HTML here would be a bit tidier if it referred to both
+# the js bundle and the video by relative paths, using the outer hash- but
+# for performance it's better to load the js bundle from its hash so that it
+# can be cached across multiple videos, and we want to load the video using
+# a separate ipfs node instance so that we can connect to specific servers.
+
 bundle_cid=$(ipfs add -Q $player_bundle)
 html_cid=$(ipfs add -Q - << EOF
 <!DOCTYPE html>
@@ -85,9 +91,22 @@ html_cid=$(ipfs add -Q - << EOF
 EOF
 )
 
-echo https://$(ipfs cid base32 $html_cid).$url_gateway
+# The HTML is self-contained, it doesn't need this directory structure
+# to work, but wrapping everything in a directory makes the output
+# of this script easier to work with. Pinning the wrapping directory
+# will pin the video data and the player bundle as well.
+#
+# The name 'index.html' is important but the other names we choose here
+# are just for human convenience, the video player does not care.
+
+dir_cid=`ipfs object new unixfs-dir`
+dir_cid=`ipfs object patch add-link $dir_cid index.html $html_cid`
+dir_cid=`ipfs object patch add-link $dir_cid hls-ipfs-player.js $bundle_cid`
+dir_cid=`ipfs object patch add-link $dir_cid video $video_cid`
+dir_cid=`ipfs cid base32 $dir_cid`
+
+echo https://$(ipfs cid base32 $dir_cid).$url_gateway
 
 if [ -n "$IPFS_CLUSTER_CTL" ]; then
-  $IPFS_CLUSTER_CTL pin add --name hls-player-$video_cid $html_cid >&2
-  $IPFS_CLUSTER_CTL pin add --name hls-player-bundle $bundle_cid >&2
+  $IPFS_CLUSTER_CTL pin add --name hls-player-$video_cid $dir_cid >&2
 fi
