@@ -16,15 +16,14 @@ player_bundle="dist/main.js"
 # This is a list of multiaddrs, space separated.
 # The client will choose one at random on startup.
 #
-# If you leave this blank, the js-ipfs library will use its default delegates, which
-# are a pool of public servers. This probably won't work well enough for video streaming,
-# we need a node that can reliably locate content.
+# By default the js-ipfs library will use a public pool
+# of delegate servers, but this probably won't work well
+# enough for video streaming.
 
 ipfs_delegates="/dns4/ipfs.diode.zone/tcp/443/wss/p2p/QmPjtoXdQobBpWa2yS4rfmHVDoCbom2r2SMDTUa1Nk7kJ5"
 
 # Bootstrap servers, space separated. The client tries to connect to all of these, to locate
 # peers. Any of the public libp2p or ipfs bootstrap or preload servers would work here.
-# If the list is empty, the js-ipfs library uses its built-in list of public bootstrap servers.
 
 ipfs_bootstrap="/dns4/node0.preload.ipfs.io/tcp/443/wss/p2p/QmZMxNdpMkewiVZLMRxaNxUeZpDUb34pWjZ1kZvsd16Zic"
 ipfs_bootstrap="$ipfs_bootstrap /dns4/node1.preload.ipfs.io/tcp/443/wss/p2p/Qmbut9Ywz9YEDrz8ySBSgWyJk41Uvm2QJPhwDJzJyGFsD6"
