@@ -1,4 +1,5 @@
 const webpack = require('webpack');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const path = require('path');
 
 const config = {
@@ -9,7 +10,10 @@ const config = {
 	},
 	output: {
 		path: path.resolve(__dirname, 'dist'),
-	}
+	},
+	plugins: [
+		// new BundleAnalyzerPlugin()
+	]
 };
 
 module.exports = config;

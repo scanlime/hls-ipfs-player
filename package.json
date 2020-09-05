@@ -5,18 +5,18 @@
   "private": true,
   "scripts": {
     "build": "webpack",
-    "example": "webpack && (url=`examples/hls-ipfs.sh QmVLAuxsFgCkDWE5kd5ZPthBm4vaksTe4YEmH266wB5ZW8`; echo // $url; curl $url) > examples/index.html"
+    "example": "webpack && examples/build.sh"
   },
   "author": "",
   "license": "CC0",
   "dependencies": {
-    "@webpack-cli/init": "^0.3.0",
     "hls.js": "^0.14.11",
     "hlsjs-ipfs-loader": "github:scanlime/hlsjs-ipfs-loader",
     "ipfs": "^0.50.0"
   },
   "devDependencies": {
     "webpack": "^4.44.1",
+    "webpack-bundle-analyzer": "^3.8.0",
     "webpack-cli": "^3.3.12"
   }
 }

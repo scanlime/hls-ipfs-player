@@ -58,35 +58,68 @@ ipfs cat $video_m3u8 > /dev/null
 # a separate ipfs node instance so that we can connect to specific servers.
 
 bundle_cid=$(ipfs add -Q $player_bundle)
-html_cid=$(ipfs add -Q - << EOF
+bundle_url="https://$(ipfs cid base32 $bundle_cid).$url_gateway/"
+
+# Generate a separate HTML page for the social media embed, for a few reasons:
+#  - it must follow twitter policies like not autoplaying long videos
+#  - we need to know its full URL to make the main HTML file
+
+css_inline="body { background: #000; margin: 0; }"
+css_inline="$css_inline video { position: absolute; width: 100%; height: 100%; left: 0; top: 0; }"
+html_viewport="width=device-width, initial-scale=1.0, maximum-scale=100.0, minimum-scale=1.0"
+title="$video_cid"
+
+embed_html_cid=$(ipfs add -Q - << EOF
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1000.0, minimum-scale=1.0">
-		<link rel="icon" href="data:,">
-		<script src="https://$(ipfs cid base32 $bundle_cid).$url_gateway/"></script>
-    <style>
-			body {
-				background: #000;
-				margin: 0;
-			}
-			video {
-				position: absolute;
-				width: 100%;
-				height: 100%;
-				left: 0;
-				top: 0;
-			}
-		</style>
-	</head>
-	<body>
-		<video muted controls
-			data-ipfs-src="$video_m3u8"
-			data-ipfs-delegates="$ipfs_delegates"
-			data-ipfs-bootstrap="$ipfs_bootstrap"
-			></video>
-	</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="$html_viewport" />
+    <link rel="icon" href="data:," />
+    <script src="$bundle_url"></script>
+    <style>$css_inline</style>
+  </head>
+  <body>
+    <video controls
+      data-ipfs-src="$video_m3u8"
+      data-ipfs-delegates="$ipfs_delegates"
+      data-ipfs-bootstrap="$ipfs_bootstrap" ></video>
+  </body>
+</html>
+EOF
+)
+
+embed_html_url="https://$(ipfs cid base32 $embed_html_cid).$url_gateway/"
+
+# Now the main index.html file
+
+index_html_cid=$(ipfs add -Q - << EOF
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="$html_viewport" />
+    <title>$title</title>
+    <meta property="og:type" content="video" />
+    <meta property="og:title" content="$title" />
+    <meta property="og:video:type" content="text/html" />
+    <meta property="og:video:width" content="560" />
+    <meta property="og:video:height" content="315" />
+    <meta property="twitter:card" content="player" />
+    <meta property="twitter:title" content="$title" />
+    <meta property="twitter:player" content="$embed_html_url" />
+    <meta property="twitter:player:width" content="560" />
+    <meta property="twitter:player:height" content="315" />
+    <link rel="icon" href="data:," />
+    <script src="$bundle_url"></script>
+    <style>$css_inline</style>
+  </head>
+  <body>
+    <video muted controls
+      data-ipfs-src="$video_m3u8"
+      data-ipfs-delegates="$ipfs_delegates"
+      data-ipfs-bootstrap="$ipfs_bootstrap" ></video>
+  </body>
 </html>
 EOF
 )
@@ -100,7 +133,8 @@ EOF
 # are just for human convenience, the video player does not care.
 
 dir_cid=`ipfs object new unixfs-dir`
-dir_cid=`ipfs object patch add-link $dir_cid index.html $html_cid`
+dir_cid=`ipfs object patch add-link $dir_cid index.html $index_html_cid`
+dir_cid=`ipfs object patch add-link $dir_cid embed.html $embed_html_cid`
 dir_cid=`ipfs object patch add-link $dir_cid hls-ipfs-player.js $bundle_cid`
 dir_cid=`ipfs object patch add-link $dir_cid video $video_cid`
 dir_cid=`ipfs cid base32 $dir_cid`
