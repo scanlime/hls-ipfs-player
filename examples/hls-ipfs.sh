@@ -20,17 +20,28 @@ player_bundle="dist/main.js"
 # are a pool of public servers. This probably won't work well enough for video streaming,
 # we need a node that can reliably locate content.
 
-ipfs_delegates="/dns4/ipfs.diode.zone/tcp/443/wss/p2p/QmPjtoXdQobBpWa2yS4rfmHVDoCbom2r2SMDTUa1Nk7kJ5"
+ipfs_delegates="$ipfs_delegates /dns4/ipfs.diode.zone/tcp/443/wss/p2p/QmPjtoXdQobBpWa2yS4rfmHVDoCbom2r2SMDTUa1Nk7kJ5"
 
 # Bootstrap servers, space separated. The client tries to connect to all of these, to locate
 # peers. Any of the public libp2p or ipfs bootstrap or preload servers would work here.
+# If the list is empty, the js-ipfs library uses its built-in list of public bootstrap servers.
 
-ipfs_bootstrap="$ipfs_delegates /dns4/sfo-3.bootstrap.libp2p.io/tcp/443/wss/p2p/QmSoLPppuBtQSGwKDZT2M73ULpjvfd3aZ6ha4oFGL1KrGM"
+ipfs_bootstrap="$ipfs_bootstrap /dns4/ams-1.bootstrap.libp2p.io/tcp/443/wss/p2p/QmSoLer265NRgSp2LA3dPaeykiS1J6DifTC88f5uVQKNAd"
+ipfs_bootstrap="$ipfs_bootstrap /dns4/lon-1.bootstrap.libp2p.io/tcp/443/wss/p2p/QmSoLMeWqB7YGVLJN3pNLQpmmEk35v6wYtsMGLzSr5QBU3"
+ipfs_bootstrap="$ipfs_bootstrap /dns4/sfo-3.bootstrap.libp2p.io/tcp/443/wss/p2p/QmSoLPppuBtQSGwKDZT2M73ULpjvfd3aZ6ha4oFGL1KrGM"
+ipfs_bootstrap="$ipfs_bootstrap /dns4/sgp-1.bootstrap.libp2p.io/tcp/443/wss/p2p/QmSoLSafTMBsPKadTEgaXctDQVcqN88CNLHXMkTNwMKPnu"
+ipfs_bootstrap="$ipfs_bootstrap /dns4/nyc-1.bootstrap.libp2p.io/tcp/443/wss/p2p/QmSoLueR4xBeUbY9WZ9xGUUxunbKWcrNFTDAadQJmocnWm"
+ipfs_bootstrap="$ipfs_bootstrap /dns4/nyc-2.bootstrap.libp2p.io/tcp/443/wss/p2p/QmSoLV4Bbm51jM9C4gDYZQ9Cy3U6aXMJDAbzgu2fzaDs64"
+ipfs_bootstrap="$ipfs_bootstrap /dns4/node0.preload.ipfs.io/tcp/443/wss/p2p/QmZMxNdpMkewiVZLMRxaNxUeZpDUb34pWjZ1kZvsd16Zic"
+ipfs_bootstrap="$ipfs_bootstrap /dns4/node1.preload.ipfs.io/tcp/443/wss/p2p/Qmbut9Ywz9YEDrz8ySBSgWyJk41Uvm2QJPhwDJzJyGFsD6"
+ipfs_bootstrap="$ipfs_bootstrap /dns4/node2.preload.ipfs.io/tcp/443/wss/p2p/QmV7gnbW5VTcJ3oyM2Xk1rdFBJ3kTkvxc87UFGsun29STS"
+ipfs_bootstrap="$ipfs_bootstrap /dns4/node3.preload.ipfs.io/tcp/443/wss/p2p/QmY7JB6MQXhxHvq7dBDh4HpbH29v4yE9JRadAVpndvzySN"
+ipfs_bootstrap="$ipfs_bootstrap $ipfs_delegates"
 
 # HTTPS gateway. This is provided by cloudflare, and it's how we load the HTTP and JS.
 # This could be replaced with any gateway that supports subdomains.
 
-url_gateway="ipfs.cf-ipfs.com"
+url_gateway=ipfs.cf-ipfs.com
 
 # Optional ipfs cluster for pinning the resulting HTML and JS.
 # export IPFS_CLUSTER_CTL="ssh user@host bin/ipfs-cluster-ctl"
