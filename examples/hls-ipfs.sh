@@ -60,7 +60,7 @@ html_cid=$(ipfs add -Q - << EOF
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1000.0, minimum-scale=1.0">
 		<link rel="icon" href="data:,">
 		<script src="https://$(ipfs cid base32 $bundle_cid).$url_gateway/"></script>
-                <style>
+    <style>
 			body {
 				background: #000;
 				margin: 0;
@@ -88,7 +88,6 @@ EOF
 echo https://$(ipfs cid base32 $html_cid).$url_gateway
 
 if [ -n "$IPFS_CLUSTER_CTL" ]; then
-	$IPFS_CLUSTER_CTL pin add --name hls-player-$video_cid $html_cid >&2
-	$IPFS_CLUSTER_CTL pin add --name hls-player-bundle $bundle_cid >&2
+  $IPFS_CLUSTER_CTL pin add --name hls-player-$video_cid $html_cid >&2
+  $IPFS_CLUSTER_CTL pin add --name hls-player-bundle $bundle_cid >&2
 fi
-
